@@ -1,0 +1,42 @@
+[program:appsaabaza-gunicorn]
+autorestart = false
+autostart = true
+command = /bin/bash -c "${APPSAABAZA_GUNICORN_BIN} -w ${APPSAABAZA_GUNICORN_WORKERS} ${APPSAABAZA_GUNICORN_TEMPORARY_DIRECTORY} appsaabaza.wsgi --max-requests 500 --max-requests-jitter 50 --worker-class sync --bind 0.0.0.0:8000 --env DJANGO_SETTINGS_MODULE=${APPSAABAZA_SETTINGS_MODULE} --timeout ${APPSAABAZA_GUNICORN_TIMEOUT}"
+redirect_stderr = true
+stderr_logfile = /dev/fd/2
+stderr_logfile_maxbytes = 0
+stdout_logfile = /dev/fd/1
+stdout_logfile_maxbytes = 0
+user = appsaabaza
+
+{% for worker in workers %}
+[program:appsaabaza-worker-{{ worker.name }}]
+autorestart = false
+autostart = true
+command = nice -n {{ worker.nice_level }} /bin/bash -c "${APPSAABAZA_PYTHON_BIN_DIR}celery worker -A appsaabaza -Ofair -l ERROR -Q {% for queue in worker.queues %}{{ queue.name }}{% if not forloop.last %},{% endif %}{% endfor %} -n appsaabaza-worker-{{ worker.name }}.%%h ${APPSAABAZA_WORKER_{{ worker.name|upper }}_CONCURRENCY}"
+killasgroup = true
+numprocs = 1
+priority = 998
+startsecs = 10
+stderr_logfile = /dev/fd/2
+stderr_logfile_maxbytes = 0
+stdout_logfile = /dev/fd/1
+stdout_logfile_maxbytes = 0
+stopwaitsecs = 1
+user = appsaabaza
+{% endfor %}
+
+[program:appsaabaza-celery-beat]
+autorestart = false
+autostart = true
+command = nice -n 1 /bin/bash -c "${APPSAABAZA_PYTHON_BIN_DIR}celery -A appsaabaza beat --pidfile= -l ERROR"
+killasgroup = true
+numprocs = 1
+priority = 998
+stderr_logfile = /dev/fd/2
+stderr_logfile_maxbytes = 0
+stdout_logfile = /dev/fd/1
+stdout_logfile_maxbytes = 0
+startsecs = 10
+stopwaitsecs = 1
+user = appsaabaza
