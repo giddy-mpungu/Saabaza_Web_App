@@ -19,12 +19,12 @@
 
 
 <p align="center">
-    <a href="https://sellfy.com/p/um2fkx/">
+    <a href=>
         <img width="400" src=>
     </a>
 </p>
 
-The link is https://sellfy.com/p/um2fkx/
+
 
 <h2 align="center">Installation</h2>
 
