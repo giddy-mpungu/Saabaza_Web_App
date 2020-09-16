@@ -19,7 +19,7 @@ from django.utils.encoding import (
 )
 from django.utils.functional import cached_property
 from django.utils.module_loading import import_string
-from django.utils.six import PY3
+from six import PY3
 from django.utils.termcolors import colorize
 from django.utils.translation import ugettext_lazy as _, ugettext
 

@@ -11,7 +11,7 @@ from django.urls import reverse
 from django.utils.encoding import force_text
 from six import python_2_unicode_compatible
 from django.utils.functional import cached_property
-from django.utils.six.moves.urllib.parse import quote_plus, unquote_plus
+from six.moves.urllib.parse import quote_plus, unquote_plus
 
 from appsaabaza.apps.converter.transformations import TransformationResize
 from appsaabaza.apps.converter.utils import get_converter_class

@@ -4,7 +4,7 @@ import logging
 from PIL import Image, ImageColor, ImageDraw, ImageFilter
 
 from django.utils.encoding import force_bytes, force_text
-from django.utils.six import with_metaclass
+from six import with_metaclass
 from django.utils.text import format_lazy
 from django.utils.translation import ugettext_lazy as _
 

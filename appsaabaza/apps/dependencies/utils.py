@@ -1,4 +1,4 @@
-from django.utils.six.moves import xmlrpc_client
+from six.moves import xmlrpc_client
 from django.utils.translation import ugettext_lazy as _
 
 import appsaabaza

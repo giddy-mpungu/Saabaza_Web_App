@@ -6,7 +6,7 @@ from django.urls import reverse
 from django.utils.encoding import force_text
 from six import python_2_unicode_compatible
 from django.utils.module_loading import import_string
-from django.utils.six import PY2
+from six import PY2
 from django.utils.translation import ugettext_lazy as _
 
 from appsaabaza.apps.documents.models import Document, DocumentType

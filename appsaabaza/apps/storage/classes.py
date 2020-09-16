@@ -3,7 +3,7 @@ import logging
 from django.core.files.base import File
 from django.core.files.storage import Storage
 from django.utils.module_loading import import_string
-from django.utils.six import BytesIO, StringIO, raise_from
+from six import BytesIO, StringIO, raise_from
 from django.utils.translation import ugettext_lazy as _
 
 from appsaabaza.apps.common.class_mixins import ModuleLoaderMixin

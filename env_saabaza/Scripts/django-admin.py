@@ -1,4 +1,4 @@
-#!c:\users\gmbug\documents\saabaza_web_app\env_saabaza\scripts\python.exe
+#!C:\Users\gmbug\Documents\Saabaza_Web_App\env_saabaza\Scripts\python.exe
 from django.core import management
 
 if __name__ == "__main__":

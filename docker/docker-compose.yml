@@ -1,0 +1,155 @@
+version: '3.7'
+
+networks:
+  bridge:
+    driver: bridge
+
+services:
+  app:
+    depends_on:
+      - postgresql
+      - redis
+      # Enable to use RabbitMQ
+      #- rabbitmq
+    environment: &env_saabza
+      # Enable to use RabbitMQ
+      # APPSAABAZA_CELERY_BROKER_URL: amqp://${APPSAABAZA_RABBITMQ_USER:-appsaabaza}:${APPSAABAZA_RABBITMQ_PASSWORD:-appsaabazarabbitpass}@rabbitmq:5672/${APPSAABAZA_RABBITMQ_VHOST:-appsaabaza}
+      # To use RabbitMQ as broker, disable Redis as broker
+      APPSAABAZA_CELERY_BROKER_URL: redis://:${APPSAABAZA_REDIS_PASSWORD:-appsaabazaredispassword}@redis:6379/0
+      APPSAABAZA_CELERY_RESULT_BACKEND: redis://:${APPSAABAZA_REDIS_PASSWORD:-appsaabazaredispassword}@redis:6379/1
+      APPSAABAZA_DATABASES: "{'default':{'ENGINE':'django.db.backends.postgresql','NAME':'${APPSAABAZA_DATABASE_DB:-appsaabaza}','PASSWORD':'${APPSAABAZA_DATABASE_PASSWORD:-appsaabazadbpass}','USER':'${APPSAABAZA_DATABASE_USER:-appsaabaza}','HOST':'postgresql'}}"
+      APPSAABAZA_DOCKER_WAIT: "postgresql:5432 redis:6379"
+      # Replace with the line below when using RabbitMQ
+      # APPSAABAZA_DOCKER_WAIT: "postgresql:5432 redis:6379 rabbitmq:5672"
+      # To add operating system packages, like additional OCR language,
+      # packages, put then in the variable below.
+      # APPSAABAZA_APT_INSTALLS: "tesseract-ocr-deu tesseract-ocr-nld"
+      # To add Python libraries, like LDAP, put then in the variable below.
+      # APPSAABAZA_PIP_INSTALLS: "python-ldap"
+    image: Saabaza_Web_App/Saabaza_Web_App:3
+    networks:
+      - bridge
+    ports:
+      - "80:8000"
+    restart: unless-stopped
+    volumes:
+      - ${APPSAABAZA_APP_VOLUME:-app}:/var/lib/appsaabaza
+      # Optional volumes to access external data like staging or watch folders
+      # - /opt/staging_files:/staging_files
+      # - /opt/watch_folder:/watch_folder
+
+  postgresql:
+    environment:
+      POSTGRES_DB: ${APPSAABAZA_DATABASE_DB:-appsaabaza}
+      POSTGRES_PASSWORD: ${APPSAABAZA_DATABASE_PASSWORD:-appsaabazadbpass}
+      POSTGRES_USER: ${APPSAABAZA_DATABASE_USER:-appsaabaza}
+    image: postgres:9.6-alpine
+    networks:
+      - bridge
+    restart: unless-stopped
+    volumes:
+      - ${APPSAABAZA_POSTGRES_VOLUME:-postgres}:/var/lib/postgresql/data
+
+  redis:
+    command:
+      - redis-server
+      - --appendonly
+      - "no"
+      - --databases
+      - "2"
+      - --maxmemory
+      - "100mb"
+      - --maxclients
+      - "500"
+      - --maxmemory-policy
+      - "allkeys-lru"
+      - --save
+      - ""
+      - --tcp-backlog
+      - "256"
+      - --requirepass
+      - "${APPSAABAZA_REDIS_PASSWORD:-appsaabazaredispassword}"
+    image: redis:5.0-alpine
+    networks:
+      - bridge
+    restart: unless-stopped
+    volumes:
+      - ${APPSAABAZA_REDIS_VOLUME:-redis}:/data
+
+  # Optional services
+
+  # celery_flower:
+  #   command:
+  #     - run_celery
+  #     - flower
+  #   depends_on:
+  #     - postgresql
+  #     - redis
+  #     # Enable to use RabbitMQ
+  #     # - rabbitmq
+  #   environment:
+  #     <<: *env_saabaza
+  #   image: Saabaza_Web_App/Saabaza_Web_App:3
+  #   networks:
+  #     - bridge
+  #   ports:
+  #     - "5555:5555"
+  #   restart: unless-stopped
+
+  # Enable to use RabbitMQ
+  # rabbitmq:
+  #   image: rabbitmq:3.8-alpine
+  #   environment:
+  #     RABBITMQ_DEFAULT_USER: ${APPSAABAZA_RABBITMQ_USER:-appsaabaza}
+  #     RABBITMQ_DEFAULT_PASS: ${APPSAABAZA_RABBITMQ_PASSWORD:-appsaabazarabbitpass}
+  #     RABBITMQ_DEFAULT_VHOST: ${APPSAABAZA_RABBITMQ_VHOST:-appsaabaza}
+  #   networks:
+  #     - bridge
+  #   restart: unless-stopped
+  #   volumes:
+  #      - ${APPSAABAZA_RABBITMQ_VOLUME:-rabbitmq}:/var/lib/rabbitmq
+
+  # Enable to run standalone workers
+  # worker_fast:
+  #   command:
+  #     - run_worker
+  #     - fast
+  #   depends_on:
+  #     - postgresql
+  #     - redis
+  #     # Enable to use RabbitMQ
+  #     # - rabbitmq
+  #   environment:
+  #     <<: *env_saabaza
+  #   image: Saabaza_Web_App/Saabaza_Web_App:3
+  #   networks:
+  #     - bridge
+  #   restart: unless-stopped
+  #   volumes:
+  #     - ${APPSAABAZA_APP_VOLUME:-app}:/var/lib/appsaabaza
+
+  # Enable to run frontend gunicorn
+  # frontend:
+  #   command:
+  #     - run_frontend
+  #   depends_on:
+  #     - postgresql
+  #     - redis
+  #     # Enable to use RabbitMQ
+  #     # - rabbitmq
+  #   environment:
+  #     <<: *env_saabaza
+  #   image: Saabaza_Web_App/Saabaza_Web_App:3
+  #   networks:
+  #     - bridge
+  #   ports:
+  #     - "81:8000"
+  #   restart: unless-stopped
+  #   volumes:
+  #     - ${APPSAABAZA_APP_VOLUME:-app}:/var/lib/appsaabaza
+
+volumes:
+  app:
+  postgres:
+  rabbitmq:
+  redis:

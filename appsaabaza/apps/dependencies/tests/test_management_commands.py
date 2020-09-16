@@ -1,7 +1,7 @@
 import mock
 
 from django.core import management
-from django.utils.six import StringIO
+from six import StringIO
 
 import appsaabaza
 

@@ -7,7 +7,7 @@ from django.db.models.constants import LOOKUP_SEP
 from django.urls import resolve as django_resolve
 from django.urls.base import get_script_prefix
 from django.utils.encoding import force_text
-from django.utils.six.moves import reduce as reduce_function
+from six.moves import reduce as reduce_function
 
 from appsaabaza.apps.common.compat import dict_type, dictionary_type
 

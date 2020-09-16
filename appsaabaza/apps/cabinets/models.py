@@ -1,7 +1,7 @@
 from django.core.exceptions import NON_FIELD_ERRORS, ValidationError
 from django.db import connection, models, transaction
 from django.urls import reverse
-from django.utils.encoding import python_2_unicode_compatible
+from from six import python_2_unicode_compatible
 from django.utils.translation import ugettext_lazy as _
 
 from mptt.fields import TreeForeignKey

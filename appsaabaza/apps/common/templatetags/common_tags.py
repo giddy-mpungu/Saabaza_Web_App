@@ -4,7 +4,7 @@ from django.template import Context, Library, Variable, VariableDoesNotExist
 from django.template.defaultfilters import truncatechars
 from django.template.loader import get_template
 from django.utils.encoding import force_text
-from django.utils.six import string_types
+from six import string_types
 from django.utils.translation import ugettext_lazy as _
 
 import appsaabaza

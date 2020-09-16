@@ -1,7 +1,7 @@
 import logging
 
 from django.db import migrations
-from django.utils.six import raise_from
+from six import raise_from
 
 from appsaabaza.apps.storage.utils import get_storage_subclass
 

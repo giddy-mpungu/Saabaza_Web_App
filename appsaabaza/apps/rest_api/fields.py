@@ -1,5 +1,5 @@
 from django.utils.module_loading import import_string
-from django.utils.six import string_types
+from six import string_types
 from django.utils.translation import ugettext_lazy as _
 
 from rest_framework import serializers

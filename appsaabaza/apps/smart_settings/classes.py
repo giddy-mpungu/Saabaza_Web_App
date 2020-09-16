@@ -12,8 +12,9 @@ from django.apps import apps
 from django.conf import settings
 from django.utils.functional import Promise
 from django.utils.encoding import (
-    force_bytes, force_text, python_2_unicode_compatible
+    force_bytes, force_text
 )
+from six import python_2_unicode_compatible
 from django.utils.translation import ugettext_lazy as _
 
 from appsaabaza.apps.common.serialization import yaml_dump, yaml_load

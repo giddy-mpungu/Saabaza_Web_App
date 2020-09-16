@@ -11,7 +11,7 @@ except ImportError:
 
 from django.core.files.uploadedfile import SimpleUploadedFile
 from django.utils.encoding import force_bytes, force_text
-from django.utils.six import BytesIO
+from six import BytesIO
 
 from appsaabaza.apps.mimetype.api import get_mimetype
 
@@ -54,6 +54,7 @@ class Archive(object):
         raise NotImplementedError
 
     def close(self):
+        # pylint: disable=maybe-no-member
         self._archive.close()
 
     def create(self):

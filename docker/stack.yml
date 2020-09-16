@@ -1,0 +1,40 @@
+version: '3.1'
+
+volumes:
+    app:
+        driver: local
+    db:
+        driver: local
+
+services:
+
+  db:
+    environment:
+      POSTGRES_DB: appsaabaza
+      POSTGRES_PASSWORD: appsaabazadbpass
+      POSTGRES_USER: appsaabaza
+    image: postgres
+    volumes:
+      - db:/var/lib/postgresql/data
+
+  app:
+    environment:
+      APPSAABAZA_CELERY_BROKER_URL: redis://redis:6379/1
+      APPSAABAZA_CELERY_RESULT_BACKEND: redis://redis:6379/0
+      APPSAABAZA_DATABASES: "{'default':{'ENGINE':'django.db.backends.postgresql','NAME':'appsaabaza','PASSWORD':'appsaabazadbpass','USER':'appsaabaza','HOST':'db'}}"
+    image: Saabaza_Web_App/Saabaza_Web_App:latest
+    ports:
+      - 80:8000
+    volumes:
+      - app:/var/lib/appsaabaza
+
+  redis:
+    command:
+      - redis-server
+      - --databases
+      - "2"
+      - --maxmemory-policy
+      - allkeys-lru
+      - --save
+      - ""
+    image: redis:5.0

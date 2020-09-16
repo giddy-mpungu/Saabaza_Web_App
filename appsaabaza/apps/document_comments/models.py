@@ -3,7 +3,7 @@ import logging
 from django.conf import settings
 from django.db import models, transaction
 from django.urls import reverse
-from django.utils.encoding import python_2_unicode_compatible
+from from six import python_2_unicode_compatible
 from django.utils.translation import ugettext_lazy as _
 
 from appsaabaza.apps.documents.models import Document

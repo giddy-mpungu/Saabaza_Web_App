@@ -1,4 +1,4 @@
-from django.utils.six import string_types
+from six import string_types
 
 from actstream.models import Action
 from rest_framework import serializers

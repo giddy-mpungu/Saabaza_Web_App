@@ -3,17 +3,19 @@ import types
 
 from django.conf import settings
 from django.http.response import StreamingHttpResponse
-from django.utils import six
-from django.utils.six.moves.urllib.parse import quote
-
+import six
+from six.moves.urllib.parse import quote
 from appsaabaza.apps.mimetype.api import get_mimetype
 
 if six.PY3:
     dict_type = dict
     dictionary_type = dict
 else:
+    # pylint: disable=maybe-no-member
     dict_type = types.DictType
+    # pylint: disable=maybe-no-member
     dictionary_type = types.DictionaryType
+    
 
 try:
     from email.Utils import collapse_rfc2231_value  # NOQA
@@ -63,6 +65,7 @@ class FileResponse(StreamingHttpResponse):
 
         self.file_to_stream = filelike = value
         if hasattr(filelike, 'close'):
+            # pylint: disable=maybe-no-member
             self._closable_objects.append(filelike)
         value = iter(lambda: filelike.read(self.block_size), b'')
         self.set_headers(filelike)

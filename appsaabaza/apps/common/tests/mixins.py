@@ -21,7 +21,7 @@ from django.urls import clear_url_caches, reverse
 from django.utils.encoding import (
     DjangoUnicodeDecodeError, force_bytes, force_text
 )
-from django.utils.six import PY3
+from six import PY3
 
 from stronghold.decorators import public
 

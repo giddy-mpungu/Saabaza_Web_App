@@ -69,7 +69,7 @@ INSTALLED_APPS = (
     'rest_framework.authtoken',
     'solo',
     'stronghold',
-    'widget_tweaks'
+    'widget_tweaks',
     'rosetta',
     # Base apps
     'appsaabaza.apps.acls',
